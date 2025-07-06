@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #00429b;
+            color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+        }
+
+        .landing-page {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 50px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        .landing-page img {
+            width: 200px;
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+            animation: slideIn 1s ease-in-out;
+        }
+
+        .landing-page h1 {
+            font-size: 2em;
+            color: #4a00e0;
+            margin-bottom: 20px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .landing-page button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            margin: 10px;
+            cursor: pointer;
+            background-color: #4a00e0;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .landing-page button:hover {
+            background-color: #2d1c89;
+            transform: scale(1.05);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="landing-page">
+        <img src="static\logo.png" alt="Rapid Delivery Logo">
+        <h1>Welcome to Rapid Delivery</h1>
+       
+        <button onclick="window.location.href='/usr_login'">Login as Customer</button>
+        <br>
+        <button onclick="window.location.href='/rest_login'">Login as Restaurant</button>
+    </div>
+
+</body>
+</html>

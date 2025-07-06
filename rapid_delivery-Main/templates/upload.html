@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Product</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #2885a7;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #36b01e;
+        }
+        #uploadError {
+            color: red;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <form id="uploadForm">
+        <label>Product Name:</label>
+        <input type="text" name="name" required><br>
+        <label>Price:</label>
+        <input type="number" name="price" required><br>
+        <label>Discount Price:</label>
+        <input type="number" name="discountPrice"><br>
+        <label>Sizes:</label>
+        <input type="text" name="sizes" placeholder="Enter sizes separated by commas" required><br>
+        <label>Description:</label>
+        <textarea name="description"></textarea><br>
+        <label>Upload Images:</label>
+        <input type="file" name="images" multiple><br>
+        <button type="submit">Upload Product</button>
+        <p id="uploadError"></p>
+    </form>
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent the default form submission
+            const formData = new FormData(document.getElementById('uploadForm'));
+            const uploadError = document.getElementById('uploadError');
+            uploadError.style.display = 'none';
+
+            try {
+                const response = await fetch('/add-product', {
+                    method: 'POST',
+                    body: formData, // Send FormData directly
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Product upload failed');
+                alert(data.message);
+                document.getElementById('uploadForm').reset(); // Reset form on success
+            } catch (error) {
+                uploadError.style.display = 'block';
+                uploadError.textContent = error.message;
+            }
+        });
+    </script>
+</body>
+</html>

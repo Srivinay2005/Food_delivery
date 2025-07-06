@@ -1,0 +1,110 @@
+<!-- templates/payment.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RAPID Delivery - Payment</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f8f9fa;
+      padding: 40px;
+      text-align: center;
+    }
+    .container {
+      background: white;
+      max-width: 500px;
+      margin: auto;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #0046B0;
+    }
+    .amount {
+      font-size: 24px;
+      margin: 20px 0;
+      color: #FF6700;
+    }
+    button {
+      background: #FF6700;
+      border: none;
+      color: white;
+      padding: 12px 25px;
+      font-size: 16px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      background: #e55d00;
+    }
+    .success-box {
+      display: none;
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Confirm Payment</h2>
+    <p>Total Payable Amount:</p>
+    <div class="amount" id="totalAmount">₹0.00</div>
+    <button id="payButton" onclick="confirmPayment()">Pay Now</button>
+
+    <div class="success-box" id="successBox">
+      ✅ Payment successful! Redirecting to home...
+    </div>
+  </div>
+
+  <script>
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const billingTotal = localStorage.getItem("billingTotal") || "0.00";
+    document.getElementById('totalAmount').innerText = `₹${billingTotal}`;
+
+    async function confirmPayment() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert("Please login to continue.");
+        return;
+      }
+
+      try {
+        const response = await fetch('/submit_cart', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ cart })
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          document.getElementById("payButton").style.display = "none";
+          document.getElementById("successBox").style.display = "block";
+
+          localStorage.removeItem('cart');
+          localStorage.removeItem('billingTotal');
+
+          // Redirect after 3 seconds
+          setTimeout(() => {
+            window.location.href = "/home";
+          }, 3000);
+        } else {
+          alert(data.error || "Payment failed.");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Something went wrong.");
+      }
+    }
+  </script>
+</body>
+</html>

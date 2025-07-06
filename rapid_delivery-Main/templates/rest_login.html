@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Signup</title>
+    <link rel="stylesheet" href="static/css/styles.css">
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #4a00e0, #8e2de2);
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }    
+        .form-container {
+            justify-content:center;
+            align-items:center;
+            max-width: 400px;
+            margin:20px 20px 20px 500px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .hidden {
+            display: none;
+        }
+        .form-container h2 {
+            text-align: center;
+        }
+        .form-container button {
+            width: 100%;
+            padding: 5px;
+            margin-top: 10px;
+            background:#160753;
+            color:white;
+            font-size:18px;
+            font-family:'Dubai';
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .form-container button:hover {
+            background: #2d1c89;
+        }
+        .form-container input {
+            margin-top: 3px;
+            height: 25px;
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        #signupRole {
+            width: 100%;
+            padding: 5px;
+            margin-top: 3px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .switch-link {
+            text-align: center;
+            margin-top: 10px;
+            color: blue;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color:rgb(255, 255, 255);
+            padding: 10px 20px;
+            color: white;
+        }
+        header img {
+            height: 80px;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2em;
+            color: #ff6300;
+        }
+        @media only screen and (max-width: 768px) {
+            header {
+                display: block;
+            }
+            header h1 {
+                margin: 3px;
+                font-size: 1.5em;
+            }
+            .form-container{
+                margin:20px;
+            }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        .fade-out {
+            animation: fadeOut 0.5s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/home"><img src="static\logo.png" alt="Logo"></a>
+        <h1>Rapid Delivery</h1>
+        <p></p>
+    </header>
+    <div class="form-container">
+        <!-- Login Form -->
+        <div id="loginForm">
+            <h2>Login</h2>
+            <form id="login">
+                <label for="loginEmail">Email:</label>
+                <input type="email" id="loginEmail" required>
+                <br><br>
+                <label for="loginPassword">Password:</label>
+                <input type="password" id="loginPassword" required>
+                <br><br>
+                <button type="submit">Login</button>
+            </form>
+            <p id="loginMessage"></p>
+            <p class="switch-link" onclick="showSignup()" style="color:white;">If not registered, please signup</p>
+        </div>
+
+        <!-- Signup Form -->
+        <div id="signupForm" class="hidden">
+            <h2>Signup</h2>
+            <form id="signup">
+                <label for="signupUsername">Restaurant Name:</label>
+                <input type="text" id="signupUsername" required>
+                <br><br>
+                <label for="signupEmail">Email:</label>
+                <input type="email" id="signupEmail" required>
+                <br><br>
+                <label for="signupPassword">Password:</label>
+                <input type="password" id="signupPassword" required>
+                <br><br>
+                <label for="signupAddress">Address:</label>
+                <input type="text" id="signupAddress" required>
+                <br><br>
+                <label for="signupPhone">Phone Number:</label>
+                <input type="text" id="signupPhone" required>
+                <br><br>
+                <label for="signupDescription">Description:</label>
+                <textarea id="signupDescription" required></textarea>
+                <br><br>
+                <label for="signupPayment">Payment Method:(UPI id)</label>
+                <input type="text" id="signupPayment" required>
+                <br><br>
+                <label for="signupLogo">Upload Logo:</label>
+                <input type="file" id="signupLogo" required>
+                <br><br>
+                <button type="submit">Signup</button>
+            </form>
+            <p id="signupMessage"></p>
+            <p class="switch-link" onclick="showLogin()" style="color:white;">Already registered? Login</p>
+        </div>
+    </div>
+
+    <script>
+        function showSignup() {
+            const loginForm = document.getElementById("loginForm");
+            const signupForm = document.getElementById("signupForm");
+
+            loginForm.classList.add("fade-out");
+            setTimeout(() => {
+                loginForm.classList.add("hidden");
+                loginForm.classList.remove("fade-out");
+
+                signupForm.classList.remove("hidden");
+                signupForm.classList.add("fade-in");
+
+                setTimeout(() => signupForm.classList.remove("fade-in"), 500);
+            }, 500);
+        }
+
+        function showLogin() {
+            window.location.reload;
+            const loginForm = document.getElementById("loginForm");
+            const signupForm = document.getElementById("signupForm");
+
+            signupForm.classList.add("fade-out");
+            setTimeout(() => {
+                signupForm.classList.add("hidden");
+                signupForm.classList.remove("fade-out");
+
+                loginForm.classList.remove("hidden");
+                loginForm.classList.add("fade-in");
+
+                setTimeout(() => loginForm.classList.remove("fade-in"), 500);
+            }, 500);
+        }
+
+        document.getElementById("login").addEventListener("submit", async function (event) {
+            event.preventDefault();
+        
+            const email = document.getElementById("loginEmail").value;
+            const password = document.getElementById("loginPassword").value;
+        
+            const response = await fetch("/restaurant/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+            });
+        
+            const result = await response.json();
+            document.getElementById("loginMessage").innerText = result.message || result.error;
+        
+            if (response.ok) {
+                alert("Login successful! Redirecting to dashboard...");
+                localStorage.setItem("token",result.token);
+                window.location.href = "/rest_dashboard"; // Redirect to dashboard
+            }
+        });
+        
+
+        document.getElementById("signup").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData();
+            formData.append("name", document.getElementById("signupUsername").value);
+            formData.append("email", document.getElementById("signupEmail").value);
+            formData.append("password", document.getElementById("signupPassword").value);
+            formData.append("address", document.getElementById("signupAddress").value);
+            formData.append("phone_number", document.getElementById("signupPhone").value);
+            formData.append("description", document.getElementById("signupDescription").value);
+            formData.append("payment_method", document.getElementById("signupPayment").value);
+            formData.append("logo", document.getElementById("signupLogo").files[0]);
+
+            const response = await fetch("/restaurant/signup", {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await response.json();
+            document.getElementById("signupMessage").innerText = result.message || result.error;
+
+            if (response.ok) {
+                alert("Signup successful! Please login.");
+                showLogin();
+            }
+        });
+    </script>
+</body>
+</html>

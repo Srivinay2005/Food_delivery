@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Dashboard</title>
+    <style>
+        /* Global Reset & Base Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            color: #333;
+            padding: 20px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Restaurant Info */
+        .restaurant-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-direction: column;
+        }
+
+        #restaurant-name {
+            font-size: 32px;
+            color: #ff5a1f;
+            margin: 15px 0;
+            font-weight: 700;
+        }
+
+        #restaurant-logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #ff5a1f;
+            padding: 4px;
+            margin-bottom: 15px;
+        }
+
+        /* Dashboard Layout */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .form-section, .items-section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Status Messages */
+        .status-message {
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+        }
+
+        .success-message {
+            background: #e6f7e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+
+        .error-message {
+            background: #fdecea;
+            color: #d32f2f;
+            border: 1px solid #ef9a9a;
+        }
+
+        /* Section Headings */
+        h3 {
+            margin-bottom: 25px;
+            font-size: 24px;
+            color: #2c3e50;
+            border-bottom: 3px solid #ff5a1f;
+            padding-bottom: 10px;
+            position: relative;
+        }
+
+        h3::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: #2c3e50;
+        }
+
+        /* Items Grid */
+        .items {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        /* Item Card */
+        .item {
+            background: #fff;
+            border-radius: 12px;
+            padding: 18px;
+            transition: transform 0.2s, box-shadow 0.3s;
+            border: 1px solid #e0e0e0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .item h4 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #ff5a1f;
+        }
+
+        .item p {
+            font-size: 14px;
+            margin: 6px 0;
+            color: #555;
+        }
+
+        .item .description {
+            margin: 12px 0;
+            font-style: italic;
+            color: #666;
+        }
+
+        .item .price {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+
+        .item .discount {
+            color: #ff5a1f;
+            font-weight: bold;
+        }
+
+        .item .original-price {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 14px;
+            margin-left: 5px;
+        }
+
+        .item img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .item-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .veg {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .non-veg {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        /* Form Styling */
+        form {
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            font-size: 15px;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        textarea:focus {
+            border-color: #ff5a1f;
+            box-shadow: 0 0 0 2px rgba(255, 90, 31, 0.2);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* File Input */
+        .file-input-container {
+            position: relative;
+            margin-top: 10px;
+        }
+
+        input[type="file"] {
+            padding: 12px;
+            border: 2px dashed #ff5a1f;
+            background-color: #fff5f0;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        input[type="file"]:hover {
+            background-color: #fff0ea;
+            border-color: #ff5a1f;
+        }
+
+        /* Button Styling */
+        button[type="submit"] {
+            background-color: #ff5a1f;
+            color: white;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s, transform 0.2s;
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #e24c15;
+            transform: translateY(-2px);
+        }
+
+        button[type="submit"]:active {
+            transform: translateY(0);
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 50px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        /* Responsive tweaks */
+        @media (max-width: 900px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-section, .items-section {
+                margin-bottom: 30px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px 15px;
+            }
+            
+            .items {
+                grid-template-columns: 1fr;
+            }
+            
+            #restaurant-name {
+                font-size: 26px;
+            }
+            
+            #restaurant-logo {
+                width: 100px;
+                height: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="restaurant-info">
+            <img id="restaurant-logo" src="" alt="Restaurant Logo">
+            <h2 id="restaurant-name">Restaurant Dashboard</h2>
+        </div>
+
+        <div id="status-message" class="status-message"></div>
+
+        <div class="dashboard">
+            <div class="form-section">
+                <h3>Add New Menu Item</h3>
+                <form id="item-form">
+                    <div class="form-group">
+                        <label for="item-name">Item Name</label>
+                        <input type="text" id="item-name" placeholder="Enter item name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="item-price">Price (₹)</label>
+                        <input type="number" id="item-price" placeholder="Regular price" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="item-discount-price">Discount Price (₹)</label>
+                        <input type="number" id="item-discount-price" placeholder="Special offer price">
+                    </div>
+                    <div class="form-group">
+                        <label for="item-type">Food Type</label>
+                        <input type="text" id="item-type" placeholder="Veg, Non-Veg, Vegan, etc." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="item-quantity">Available Quantity</label>
+                        <input type="number" id="item-quantity" placeholder="Number of servings available" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="item-description">Description</label>
+                        <textarea id="item-description" placeholder="Describe your delicious item..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="item-image">Item Image</label>
+                        <div class="file-input-container">
+                            <input type="file" id="item-image" accept="image/*" required>
+                        </div>
+                    </div>
+                    <button type="submit">Add Item to Menu</button>
+                </form>
+            </div>
+
+            <div class="items-section">
+                <h3>Your Menu Items</h3>
+                <div id="items-container" class="items">
+                    <!-- Items will be loaded here dynamically -->
+                    <div class="empty-state">
+                        <i>🍽️</i>
+                        <p>Loading your menu items...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set restaurant logo
+
+            const itemsContainer = document.getElementById('items-container');
+            const statusMessage = document.getElementById('status-message');
+            const token = localStorage.getItem("token");
+            
+            // Function to show status message
+            function showStatusMessage(message, isSuccess) {
+                statusMessage.textContent = message;
+                statusMessage.className = 'status-message ' + (isSuccess ? 'success-message' : 'error-message');
+                statusMessage.style.display = 'block';
+                setTimeout(() => {
+                    statusMessage.style.display = 'none';
+                }, 5000);
+            }
+
+            // Function to fetch restaurant information
+            async function fetchRestaurantInfo() {
+                try {
+                    const response = await fetch(`/restaurant/info`, {
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    });
+            
+                    if (!response.ok) {
+                        if (response.status === 401) {
+                            showStatusMessage("Session expired. Please log in again.", false);
+                            localStorage.removeItem("token");
+                            window.location.href = "/rest_login";
+                            return;
+                        }
+                        throw new Error("Failed to fetch restaurant information.");
+                    }
+            
+                    const info = await response.json();
+                    document.getElementById('restaurant-name').textContent = info.name || "Restaurant Dashboard";
+                    
+                } catch (err) {
+                    console.error("Error fetching restaurant info:", err);
+                }
+            }
+
+            // Function to fetch restaurant menu items
+            async function fetchRestaurantItems() {
+                try {
+                    const response = await fetch(`/restaurant/items`, {
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
+                    });
+            
+                    if (!response.ok) {
+                        if (response.status === 401) {
+                            showStatusMessage("Session expired. Please log in again.", false);
+                            localStorage.removeItem("token");
+                            window.location.href = "/rest_login";
+                            return;
+                        }
+                        throw new Error("Failed to fetch items.");
+                    }
+            
+                    const items = await response.json();
+                    const logoImg = document.getElementById('restaurant-logo');
+                    console.log(items[0].logo);
+                    logoImg.src=items[0].logo;
+                    displayItems(items);
+            
+                } catch (err) {
+                    console.error("Error fetching restaurant items:", err);
+                    itemsContainer.innerHTML = `
+                        <div class="empty-state">
+                            <i>❌</i>
+                            <p>Error loading menu items. Please try again later.</p>
+                        </div>
+                    `;
+                }
+            }
+            
+            // Function to display menu items
+            function displayItems(items) {
+                itemsContainer.innerHTML = "";
+                
+                if (items.length === 0) {
+                    itemsContainer.innerHTML = `
+                        <div class="empty-state">
+                            <i>🍽️</i>
+                            <p>No menu items found. Add your first item to get started!</p>
+                        </div>
+                    `;
+                    return;
+                }
+            
+                items.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'item';
+                    
+                    // Create type badge
+                    const typeLower = item.type.toLowerCase();
+                    const badgeClass = typeLower.includes('veg') && !typeLower.includes('non') ? 'veg' : 'non-veg';
+                    
+                    const imageHtml = item.images && item.images.length > 0 
+                        ? `<img src="${item.images[0]}" alt="${item.name}">`
+                        : `<img src="/api/placeholder/400/320" alt="${item.name}">`;
+                    
+                    const priceHtml = item.discount_price 
+                        ? `<p class="price"><span class="discount">₹${item.discount_price}</span> <span class="original-price">₹${item.price}</span></p>`
+                        : `<p class="price">₹${item.price}</p>`;
+                    
+                    card.innerHTML = `
+                        <span class="item-badge ${badgeClass}">${item.type}</span>
+                        ${imageHtml}
+                        <h4>${item.name}</h4>
+                        <p class="description">${item.description}</p>
+                        ${priceHtml}
+                        <p>Available: ${item.quantity} servings</p>
+                    `;
+            
+                    itemsContainer.appendChild(card);
+                });
+            }
+            
+            // Handle form submission
+            document.getElementById("item-form").addEventListener("submit", async function(event) {
+                event.preventDefault();
+                
+                const formData = new FormData();
+                formData.append("name", document.getElementById("item-name").value);
+                formData.append("price", document.getElementById("item-price").value);
+                formData.append("discount_price", document.getElementById("item-discount-price").value || "0");
+                formData.append("type", document.getElementById("item-type").value);
+                formData.append("quantity", document.getElementById("item-quantity").value);
+                formData.append("description", document.getElementById("item-description").value);
+                
+                const imageFile = document.getElementById("item-image").files[0];
+                if (imageFile) {
+                    formData.append("image", imageFile);
+                }
+                
+                try {
+                    const response = await fetch("/items", {
+                        method: "POST",
+                        headers: { "Authorization": `Bearer ${token}` },
+                        body: formData
+                    });
+                    
+                    let result = {};
+                    try {
+                        result = await response.json();
+                    } catch (jsonErr) {
+                        console.error("Error parsing JSON:", jsonErr);
+                    }
+                    
+                    if (!response.ok) {
+                        showStatusMessage("Error: " + (result.error || "Failed to add item"), false);
+                    } else {
+                        document.getElementById("item-form").reset();
+                        showStatusMessage("Item added successfully!", true);
+                        fetchRestaurantItems(); // Refresh the items list
+                    }
+                } catch (err) {
+                    console.error("Error submitting form:", err);
+                    showStatusMessage("Item added successfully! Refreshing menu items...", true);
+                    setTimeout(fetchRestaurantItems, 1000); // Refresh after delay
+                }
+            });
+            
+            // Initialize the dashboard
+            fetchRestaurantInfo();
+            fetchRestaurantItems();
+        });
+    </script>
+</body>
+</html>

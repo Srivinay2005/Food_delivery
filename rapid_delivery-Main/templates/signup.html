@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Rapid Delivery | Signup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #fff;
+            color: rgb(237, 82, 5);
+            height: 100vh;
+            display: flex;
+        }
+
+        .left-section, .right-section {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .left-section img {
+            width: 550px;
+            height: auto;
+        }
+
+        .right-section {
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .right-section h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: #000;
+        }
+
+        .right-section h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: rgb(237, 86, 5);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="email"],
+        input[type="password"] {
+            padding: 1rem;
+            background-color: #fff;
+            border: 1px solid #2f3336;
+            border-radius: 9999px;
+            font-size: 16px;
+            color: #000;
+        }
+
+        input::placeholder {
+            color: #000;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #1d9bf0;
+        }
+
+        button {
+            background-color: #1d9bf0;
+            color: #000;
+            padding: 0.9rem;
+            border: none;
+            border-radius: 9999px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #1a8cd8;
+        }
+
+        .signup-link {
+            margin-top: 1rem;
+            font-size: 18px;
+            color: #1d9bf0;
+        }
+
+        .signup-link a {
+            color: #1d9bf0;
+            text-decoration: none;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .left-section {
+                padding-top: 2rem;
+            }
+            .left-section img {
+                width: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="left-section">
+        <img src="static/logo.png" alt="Rapid Delivery Logo">
+    </div>
+    <div class="right-section">
+        <h1>Get Started!</h1>
+        <h2>Start your journey with Rapid Delivery today.</h2>
+        <form id="signupForm">
+            <input type="text" name="username" placeholder="Username" required />
+            <input type="email" name="email" placeholder="Email" required />
+            <input type="password" name="password" placeholder="Password" required />
+            <input type="number" name="phone_number" placeholder="Phone Number" required />
+            <button type="submit">Sign Up</button>
+        </form>
+        <div class="signup-link">
+            <p>Already have an account? <button onclick="openLogin()">Login</button></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("signupForm").addEventListener("submit", async function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            let formData = new FormData(this);
+            let data = Object.fromEntries(formData.entries());
+
+            try {
+                let response = await fetch("/user/signup", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                let result = await response.json();
+                alert(result.message);
+
+                if (response.ok) {
+                    window.location.href = "/usr_login"; // Redirect to login page after successful signup
+                }
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        });
+
+        function openLogin() {
+            window.location.href = "/usr_login";
+        }
+    </script>
+</body>
+</html>

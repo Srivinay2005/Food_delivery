@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAPID Delivery - Billing Summary</title>
+    <style>
+        /* Global Reset & Base Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            padding: 20px;
+        }
+
+        /* Header Styling */
+        header {
+            background: linear-gradient(to right, #0046B0, #0052cc);
+            color: white;
+            padding: 15px 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 10px 10px 0 0;
+            margin-bottom: -10px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .brand h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .brand h1 span {
+            color: #FF6700;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #FF6700;
+            padding: 2px;
+        }
+
+        /* Billing Container */
+        .billing-container {
+            background: white;
+            padding: 30px;
+            border-radius: 0 0 10px 10px;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 3px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .billing-title {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #0046B0;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 20px;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            background-color: #0046B0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .user-details {
+            flex-grow: 1;
+        }
+
+        .user-details p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        thead {
+            background-color: #f8f9fa;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #555;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 15px;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        /* Offer & Summary Styling */
+        .summary {
+            background-color: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        #offerMessage {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        #offerMessage::before {
+            content: '🎁';
+            position: absolute;
+            left: 10px;
+            top: 14px;
+            font-size: 16px;
+        }
+
+        .highlight {
+            font-weight: 600;
+            color: #0046B0;
+        }
+
+        .summary.highlight {
+            border-left: 4px solid #FF6700;
+        }
+
+        /* Button Styling */
+        .btn-submit {
+            background: #FF6700;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto 0;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(255, 103, 0, 0.3);
+        }
+
+        .btn-submit:hover {
+            background: #e55d00;
+            transform: translateY(-2px);
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn-back {
+            background-color: #f0f0f0;
+            color: #555;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background-color: #e2e2e2;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .billing-container {
+                padding: 20px;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn-back, .btn-submit {
+                width: 100%;
+            }
+        }
+
+        /* Empty Cart State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .empty-icon {
+            color: #ccc;
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: #888;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="brand">
+            <img src="static/logo.png" alt="RAPID Delivery Logo" class="logo" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"white\"><circle cx=\"12\" cy=\"12\" r=\"10\"/></svg>'">
+            <h1>RAPID <span>Delivery</span></h1>
+        </div>
+    </header>
+
+    <div class="billing-container">
+        <h2 class="billing-title">Billing Summary</h2>
+        
+        <div class="user-info">
+            <div class="user-avatar" id="userAvatar">U</div>
+            <div class="user-details">
+                <p><strong>User:</strong> <span id="username"></span> (ID: <span id="userId"></span>)</p>
+            </div>
+        </div>
+
+        <div id="cartContent">
+            <table id="cartTable">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Price (₹)</th>
+                        <th>Quantity</th>
+                        <th>Subtotal (₹)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Cart items will populate here -->
+                </tbody>
+            </table>
+
+            <div class="summary" id="offerMessage"></div>
+            <div class="summary highlight" id="finalAmount"></div>
+
+            <div class="action-buttons">
+                <button class="btn-back" onclick="redirect()">Back to Menu</button>
+                <button class="btn-submit" onclick="goToPayment()">Confirm Order</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function redirect() {
+            window.location.href = "/home"; // Redirect to home page
+        }
+        function DecodeToken(token) {
+            try{
+            const arrayToken = token.split('.');
+            const tokenPayload = JSON.parse(atob(arrayToken[1]));
+            return tokenPayload;
+            }catch (e) {
+                console.error("Error parsing token payload:", e);
+                window.location.href = "/usr_login"; // Redirect to login if token is invalid
+            }
+          }
+          const token =localStorage.getItem('token'); // Assume token stored in localStorage
+          const payload = DecodeToken(token);
+          document.getElementById('username').innerText = payload.username || 'Guest';
+          document.getElementById('userId').innerText = payload.id || 'N/A';
+        function goToPayment() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            if (cart.length === 0) {
+                alert("Your cart is empty!");
+                return;
+            }
+        
+            // Store cart & total in localStorage and go to payment
+            const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+            localStorage.setItem("billingTotal", total.toFixed(2));
+            window.location.href = "/verify-phone";
+        }
+        
+        // Initialize user avatar with first letter of username
+        document.addEventListener('DOMContentLoaded', function() {
+            const username = document.getElementById('username').innerText.trim();
+            if (username && username !== '{{ username }}') {
+                document.getElementById('userAvatar').innerText = username.charAt(0).toUpperCase();
+            }
+        });
+
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const tableBody = document.querySelector('#cartTable tbody');
+        const offerMsg = document.getElementById('offerMessage');
+        const finalAmt = document.getElementById('finalAmount');
+        const cartContent = document.getElementById('cartContent');
+
+        if (cart.length === 0) {
+            // Display empty cart message
+            cartContent.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">🛒</div>
+                    <h3>Your cart is empty</h3>
+                    <p>Add some delicious items to your cart first!</p>
+                    <button class="btn-submit" onclick="window.location.href='/home'">Browse Menu</button>
+                </div>
+            `;
+        } else {
+            let total = 0;
+            cart.forEach(item => {
+                const subtotal = item.price * item.quantity;
+                total += subtotal;
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>₹${item.price.toFixed(2)}</td>
+                    <td>${item.quantity}</td>
+                    <td>₹${subtotal.toFixed(2)}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            let discount = 0;
+            let finalTotal = total;
+            let offer = "";
+
+            if (total >= 1000) {
+                discount = total * 0.10;
+                offer = "10% discount applied for bills above ₹1000.";
+            } else if (total >= 500 && total < 1000) {
+                discount = total * 0.05;
+                offer = "5% discount applied for bills between ₹500 and ₹999.";
+            } else if (total >= 200 && total < 500) {
+                offer = "🎁 Free Family Pack Ice Cream worth ₹100/- included for bills between ₹200 and ₹499.";
+            } else {
+                offer = "No discount applicable.";
+            }
+
+            finalTotal = total - discount;
+
+            offerMsg.innerText = offer;
+            finalAmt.innerHTML = `Total: ₹${total.toFixed(2)}<br>Discount: ₹${discount.toFixed(2)}<br><span class="highlight">Payable Amount: ₹${finalTotal.toFixed(2)}</span>`;
+        }
+
+        async function submitCart() {
+           if (cart.length === 0) {
+                alert("Your cart is empty!");
+                return;
+            }          
+            const token = localStorage.getItem('token');  // Assume token stored in localStorage
+            try {
+                const response = await fetch('/submit_cart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ cart })
+                });
+
+                const data = await response.json();
+                alert(data.message || "Order placed successfully!");
+                localStorage.removeItem('cart');
+                window.location.href = "/home";  // Redirect to home
+            } catch (err) {
+                alert("Error processing order.");
+                console.error(err);
+            }
+        }
+    </script>
+</body>
+</html>
